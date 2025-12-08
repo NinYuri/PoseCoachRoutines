@@ -1,0 +1,26 @@
+# Entorno virtual
+venv/
+.env
+
+# Archivos de cache y compilación
+__pycache__/
+*.pyc
+
+# Base de datos local
+*.sqlite3
+
+# Configuraciones locales
+local_settings.py
+
+# Archivos de logs
+*.log
+
+# Archivos de IDE
+.idea/
+
+# Archivos de distribución
+build/
+dist/
+
+# Archivos del sistema
+.DS_Store
