@@ -4,7 +4,7 @@ from .models import Rutina, DiaRutina, DiaEjercicio
 class DiaEjercicioSerializer(serializers.ModelSerializer):
     class Meta:
         model = DiaEjercicio
-        fields = ["ejercicio_id", "name", "series", "reps", "rest_seconds"]
+        fields = ["ejercicio_id", "name", "image_url", "series", "reps", "rest_seconds"]
 
 class DiaRutinaSerializer(serializers.ModelSerializer):
     detalles = DiaEjercicioSerializer(many=True)

@@ -144,3 +144,42 @@ class GetRutinaView(APIView):
         except Rutina.DoesNotExist:
             return Response({"detail": "Rutina no encontrada"}, status=404)
         return Response(RutinaSerializer(rutina).data)
+
+
+class CheckRoutineView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        user_id = request.user.id
+        rutina = Rutina.objects.filter(user_id=user_id).order_by("-created_at").first()
+
+        if rutina:
+            return Response({"rutina_id": str(rutina.id)})
+        return Response({"rutina_id": None})
+
+
+class GetRoutineByDays(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, rutina_id):
+        try:
+            rutina = Rutina.objects.get(id=rutina_id, user_id=request.user.id)
+            dias = {}
+            for dia in rutina.dias.all():
+                dias[dia.dia] = {
+                    "nombre": dia.nombre,
+                    "musculo": dia.musculo,
+                    "detalles": [
+                        {
+                            "ejercicio_id": ex.ejercicio_id,
+                            "name": ex.name,
+                            "image_url": ex.image_url,
+                            "series": ex.series,
+                            "reps": ex.reps,
+                            "rest_seconds": ex.rest_seconds
+                        } for ex in dia.detalles.all()
+                    ]
+                }
+            return Response({"id": str(rutina.id), "dias": dias})
+        except Rutina.DoesNotExist:
+            return Response({"error": "Rutina no encontrada"}, status=404)
